@@ -1,6 +1,7 @@
 package pages.popups;
 
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 
 public class PaywallPage extends BasePopup {
@@ -22,24 +23,29 @@ public class PaywallPage extends BasePopup {
     @iOSXCUITFindBy(accessibility = "3-day free trial")
     private WebElement freeTrialLabel;
 
+    @Step("Verify main paywall is visible")
     @Override
     public boolean isDisplayed() {
         return isDisplayed(tryForFreeButton);
     }
 
+    @Step("Read paywall title")
     public String getTitle() {
         return readText(title);
     }
 
+    @Step("Read yearly price")
     public String getYearlyPrice() {
         return readText(yearlyPrice);
     }
 
+    @Step("Read weekly price")
     public String getWeeklyPrice() {
         return readText(weeklyPrice);
     }
 
     /** Returns true when the yearly plan with free trial is pre-selected. */
+    @Step("Check free trial option is active")
     public boolean isFreeOptionActive() {
         return isDisplayed(freeTrialLabel);
     }

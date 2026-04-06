@@ -1,6 +1,7 @@
 package pages;
 
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import pages.popups.ExpertsPaywallPage;
 import pages.popups.PaywallPage;
@@ -41,25 +42,41 @@ public class SettingsPage extends BasePage {
     private WebElement userIdButton;
 
     /** Uses the NavigationBar title as a stable anchor. */
+    @Step("Verify settings screen is loaded")
     public boolean isLoaded() {
         return isDisplayed(screenTitle);
     }
 
+    @Step("Tap 'Try For Free'")
     public PaywallPage tapTryForFree() {
         tap(tryForFreeButton);
         return new PaywallPage();
     }
 
+    @Step("Tap 'Get Now'")
     public ExpertsPaywallPage tapGetNow() {
         tap(getNowButton);
         return new ExpertsPaywallPage();
     }
 
+    @Step("Check Terms of Use is visible")
     public boolean isTermsOfUseVisible()      { return isDisplayed(termsOfUseButton); }
+
+    @Step("Check Privacy & Security is visible")
     public boolean isPrivacySecurityVisible() { return isDisplayed(privacySecurityButton); }
+
+    @Step("Check Sounds & Haptics is visible")
     public boolean isSoundsHapticsVisible()   { return isDisplayed(soundsHapticsLabel); }
+
+    @Step("Check Language for AI Answers is visible")
     public boolean isLanguageForAIVisible()   { return isDisplayed(languageButton); }
+
+    @Step("Check Contact Us is visible")
     public boolean isContactUsVisible()       { return isDisplayed(contactUsButton); }
+
+    @Step("Check Share Your Ideas is visible")
     public boolean isShareIdeasVisible()      { scrollTo(shareIdeasButton); return isDisplayed(shareIdeasButton); }
-    public boolean isUserIdVisible()          { scrollTo(userIdButton);    return isDisplayed(userIdButton); }
+
+    @Step("Check User ID is visible")
+    public boolean isUserIdVisible()          { scrollTo(userIdButton); return isDisplayed(userIdButton); }
 }

@@ -1,13 +1,19 @@
 package tests;
 
 import core.BaseTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.assertj.core.api.SoftAssertions;
 import org.testng.annotations.Test;
 import pages.CameraPage;
 import pages.MainPage;
 
+@Epic("Navigation")
+@Feature("Main Screen")
 public class MainScreenTest extends BaseTest {
 
+    @Story("Subject options navigation")
     @Test(groups = {"smoke", "regression"},
           description = "Main screen: all 4 options visible and each opens the camera")
     public void mainScreenOptionsSmoke() {

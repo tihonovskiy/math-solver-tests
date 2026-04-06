@@ -3,6 +3,7 @@ package pages;
 import core.utils.Waits;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import io.qameta.allure.Step;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -27,6 +28,7 @@ public class CameraPage extends BasePage {
     @iOSXCUITFindBy(accessibility = "Solve")
     private WebElement solveButton;
 
+    @Step("Verify camera screen is loaded")
     public boolean isLoaded() {
         return isDisplayed(hintLabel);
     }
@@ -35,6 +37,7 @@ public class CameraPage extends BasePage {
      * Opens the photo picker, selects the most recent photo from the library,
      * waits for the crop animation to finish, taps Solve and returns the paywall.
      */
+    @Step("Upload first image from library and tap Solve")
     public PaywallPage uploadFirstImageFromLibrary() {
         tap(libraryButton);
 
@@ -62,6 +65,7 @@ public class CameraPage extends BasePage {
     /**
      * Taps the native back button to return to the main screen.
      */
+    @Step("Go back to main screen")
     public MainPage goBack() {
         tap(backButton);
         return new MainPage();

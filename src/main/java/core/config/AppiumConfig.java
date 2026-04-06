@@ -42,6 +42,11 @@ public interface AppiumConfig extends Config {
     @DefaultValue("15")
     int waitTimeoutSeconds();
 
+    // Appium server auto-start (false = connect to already running server)
+    @Key("appium.autostart")
+    @DefaultValue("false")
+    boolean appiumAutostart();
+
     // Real device capabilities (leave empty for simulator)
     @Key("udid")
     String udid();

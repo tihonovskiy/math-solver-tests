@@ -60,6 +60,11 @@ mvn test -Dthread.count=4
 mvn test -Dplatform.version=26.4 -Ddevice.name="iPhone 16 Pro"
 ```
 
+### Auto-start Appium server (no manual `appium` command needed)
+```bash
+mvn test -Dappium.autostart=true
+```
+
 ---
 
 ## Real Device Setup
@@ -101,10 +106,10 @@ src/
 │   │   ├── config/            # Owner-based type-safe config (AppiumConfig, ConfigProvider)
 │   │   ├── data/              # TestData — single source of truth for expected UI strings
 │   │   ├── driver/            # DriverManager (ThreadLocal), IOSDriverFactory
-│   │   ├── listeners/         # ScreenshotListener, RetryAnalyzer(Listener)
+│   │   ├── listeners/         # ScreenshotListener, RetryAnalyzer(Listener), AppiumServerListener
 │   │   └── utils/             # Waits — centralized explicit waits
 │   └── pages/                 # Page Object Model
-│       ├── components/        # Reusable UI components (TabBar)
+│       ├── components/        # Reusable UI components (BaseComponent → TabBar)
 │       └── popups/            # Modal screens (BasePopup, PaywallPage, ExpertsPaywallPage)
 ├── main/resources/
 │   └── config.properties      # Default config (simulator)

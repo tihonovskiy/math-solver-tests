@@ -3,9 +3,10 @@ package pages.components;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
-import pages.BasePage;
-
-public class TabBar extends BasePage {
+/**
+ * Bottom navigation bar — present on all main screens.
+ */
+public class TabBar extends BaseComponent {
 
     @iOSXCUITFindBy(accessibility = "AI")
     private WebElement aiTab;

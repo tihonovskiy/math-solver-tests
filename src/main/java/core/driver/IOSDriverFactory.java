@@ -8,8 +8,6 @@ import io.appium.java_client.ios.options.XCUITestOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.Duration;
 
 public class IOSDriverFactory implements PlatformDriverFactory {
@@ -45,14 +43,6 @@ public class IOSDriverFactory implements PlatformDriverFactory {
         log.info("Creating IOSDriver: device='{}' iOS={} bundleId={}",
                 config.deviceName(), config.platformVersion(), config.bundleId());
 
-        return new IOSDriver(serverUrl(), options);
-    }
-
-    private URL serverUrl() {
-        try {
-            return new URL(config.appiumServerUrl());
-        } catch (MalformedURLException e) {
-            throw new IllegalStateException("Invalid Appium server URL: " + config.appiumServerUrl(), e);
-        }
+        return new IOSDriver(AppiumServerManager.resolveUrl(), options);
     }
 }

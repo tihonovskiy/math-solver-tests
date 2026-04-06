@@ -35,23 +35,29 @@ in parallel. Use `strategy.matrix` in GitHub Actions + `-Dplatform.version` / `-
 
 ## Framework Improvements
 
-### FW-1: Android support
+### FW-1: Data-driven tests with `@DataProvider` + JSON
+Currently paywall assertions use `TestData` constants — one fixed set of expected values.
+`@DataProvider` makes sense **when there are multiple data sets to verify**, for example:
+
+- App supports multiple regions/currencies (USD, EUR, GBP) — each with its own price tier
+- A/B test is active and two price variants need to be checked simultaneously
+- Multiple subscription plans are added (monthly, yearly, lifetime)
+
+**Implementation sketch when the time comes:**
+- Add `jackson-databind` to `pom.xml`
+- Create `src/main/resources/data/paywall-prices.json` with an array of price configurations
+- Create `core/data/JsonDataReader` that maps JSON rows to `Object[][]`
+- Add `@DataProvider` to paywall test classes; each row becomes a separate test run in Allure
+
+Until the app has multiple verifiable price configurations, `TestData` constants are simpler and equally correct.
+
+### FW-2: Android support
 Add `AndroidDriverFactory` + `AndroidOptions`, platform detection in `DriverManager`
 (select factory based on `-Dplatform.name`). Locators: audit pages for iOS-only
 `@iOSXCUITFindBy` and introduce `@AndroidFindBy` counterparts or switch to
 `@FindBy` with platform-agnostic accessibility ids where possible.
 
-### FW-2: Allure step annotations in page methods
-Annotate page actions with `@Step` (e.g. `@Step("Tap 'Math Problems'")`).
-This adds a step-by-step execution log in the Allure report and removes the need
-for manual log statements in most pages.
-
-### FW-3: Data-driven tests with `@DataProvider`
-Paywall price assertions currently use hardcoded `TestData` constants.
-Replace with a `@DataProvider` that reads price expectations from a JSON/CSV file
-so QA can update expected values without touching Java source.
-
-### FW-4: Environment profiles (dev / staging / prod)
+### FW-2: Environment profiles (dev / staging / prod)
 Extend `AppiumConfig` `@Config.Sources` with a third tier:
 `classpath:config-${env}.properties` inserted between `system:properties`
 and `config.properties`. Owner's MERGE policy silently skips the file if
@@ -60,7 +66,7 @@ Create `config-dev.properties` and `config-staging.properties` with only
 the keys that differ (e.g. `bundle.id`, `no.reset`, `wait.timeout`).
 Usage: `mvn test -Denv=staging -Dgroups=regression`.
 
-### FW-5: Programmatic Appium server start via `AppiumServiceBuilder`
+### FW-3: Programmatic Appium server start via `AppiumServiceBuilder`
 Add `appium.autostart=false` key to `AppiumConfig`.
 Create `AppiumServerManager` (uses `AppiumServiceBuilder`, `usingAnyFreePort()`)
 and `AppiumServerListener implements ISuiteListener` that starts/stops the server
@@ -70,26 +76,20 @@ which returns the running service URL or falls back to `config.appiumServerUrl()
 Register `AppiumServerListener` in `testng.xml`.
 Benefit: CI runners need no pre-installed Appium server; `mvn test -Dappium.autostart=true` is self-contained.
 
-### FW-6: Permission dialog handling in a Flow layer
+### FW-4: Permission dialog handling in a Flow layer
 `CameraPage.uploadFirstImageFromLibrary()` assumes Photos "All Photos" access is
 already granted. Add a `PermissionFlow` utility that detects and dismisses iOS
 system permission alerts (Photos, Camera, Notifications) using
 `driver.switchTo().alert()` or XCUITest's native alert handling.
 
-### FW-7: Allure `@Epic` / `@Feature` / `@Story` annotations on tests
-Add Allure BDD-style annotations to test classes and methods. Example:
-`@Epic("Monetization")`, `@Feature("Main Paywall")`, `@Story("Cold start paywall")`.
-This groups tests logically in the Allure report and gives reviewers a clear picture
-of functional coverage without reading the code.
-
-### FW-8: `BaseComponent` base class for reusable UI components
+### FW-5: `BaseComponent` base class for reusable UI components
 `TabBar` currently extends `BasePage`, but semantically it is a page component,
 not a standalone screen. Introduce `BaseComponent extends BasePage` (or rename
 `BasePage` → `BaseScreenElement`) so that components have their own semantic layer.
 This improves readability and signals intent when the team adds more shared components
 (e.g. search bars, navigation headers).
 
-### FW-9: Test image fixture management via `@photo` push
+### FW-6: Test image fixture management via `@photo` push
 `CameraPage.uploadFirstImageFromLibrary()` currently selects the most recent photo
 already present on the device/simulator. For deterministic test runs add a
 `pushTestImageToDevice()` helper that uses `IOSDriver.pushFile("@photo", bytes)`

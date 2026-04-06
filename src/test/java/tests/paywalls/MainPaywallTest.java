@@ -2,14 +2,20 @@ package tests.paywalls;
 
 import core.BaseTest;
 import core.data.TestData;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.assertj.core.api.SoftAssertions;
 import org.testng.annotations.Test;
 import pages.CameraPage;
 import pages.SettingsPage;
 import pages.popups.PaywallPage;
 
+@Epic("Monetization")
+@Feature("Main Paywall")
 public class MainPaywallTest extends BaseTest {
 
+    @Story("Cold start paywall")
     @Test(groups = {"smoke", "regression"},
           description = "Main paywall: shown on cold start with correct title, prices and free option pre-selected")
     public void mainPaywallOnColdStart() {
@@ -35,6 +41,7 @@ public class MainPaywallTest extends BaseTest {
         soft.assertAll();
     }
 
+    @Story("Paywall from Settings")
     @Test(groups = {"smoke", "regression"},
           description = "Main paywall: shown from Settings → Try For Free with correct title and prices")
     public void mainPaywallFromSettings() {
@@ -62,6 +69,7 @@ public class MainPaywallTest extends BaseTest {
         soft.assertAll();
     }
 
+    @Story("Paywall from Camera")
     @Test(groups = {"smoke", "regression"},
           description = "Main paywall: shown after uploading an image and tapping Solve")
     public void mainPaywallFromCamera() {

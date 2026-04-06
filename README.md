@@ -99,7 +99,7 @@ src/
 │   ├── core/
 │   │   ├── BaseTest.java      # @BeforeMethod/@AfterMethod, launchToMainScreen()
 │   │   ├── config/            # Owner-based type-safe config (AppiumConfig, ConfigProvider)
-│   │   ├── data/              # TestData — single source of truth for expected strings
+│   │   ├── data/              # TestData — single source of truth for expected UI strings
 │   │   ├── driver/            # DriverManager (ThreadLocal), IOSDriverFactory
 │   │   ├── listeners/         # ScreenshotListener, RetryAnalyzer(Listener)
 │   │   └── utils/             # Waits — centralized explicit waits

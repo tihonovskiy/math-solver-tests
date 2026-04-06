@@ -2,12 +2,18 @@ package tests.paywalls;
 
 import core.BaseTest;
 import core.data.TestData;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.assertj.core.api.SoftAssertions;
 import org.testng.annotations.Test;
 import pages.popups.ExpertsPaywallPage;
 
+@Epic("Monetization")
+@Feature("Experts Paywall")
 public class ExpertsPaywallTest extends BaseTest {
 
+    @Story("Paywall from Experts tab")
     @Test(groups = "regression",
           description = "Experts paywall: shown from Experts tab → Continue with correct title and price")
     public void expertsPaywallFromExpertsTab() {
@@ -30,6 +36,7 @@ public class ExpertsPaywallTest extends BaseTest {
         soft.assertAll();
     }
 
+    @Story("Paywall from Settings")
     @Test(groups = "regression",
           description = "Experts paywall: shown from Settings → Get Now with correct title and price")
     public void expertsPaywallFromSettings() {

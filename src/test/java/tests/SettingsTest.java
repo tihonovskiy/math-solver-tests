@@ -1,12 +1,18 @@
 package tests;
 
 import core.BaseTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.assertj.core.api.SoftAssertions;
 import org.testng.annotations.Test;
 import pages.SettingsPage;
 
+@Epic("Settings")
+@Feature("Settings Screen")
 public class SettingsTest extends BaseTest {
 
+    @Story("Settings options visibility")
     @Test(groups = "regression",
           description = "Settings: all required options are visible")
     public void settingsOptionsSmoke() {

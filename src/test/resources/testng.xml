@@ -10,6 +10,8 @@
 <suite name="MathSolver Smoke Suite" parallel="classes" thread-count="1">
 
     <listeners>
+        <!-- Starts/stops local Appium server when appium.autostart=true -->
+        <listener class-name="core.listeners.AppiumServerListener"/>
         <!-- Attaches a screenshot to Allure report on every failure or skip -->
         <listener class-name="core.listeners.ScreenshotListener"/>
         <!-- Applies RetryAnalyzer to every @Test automatically.

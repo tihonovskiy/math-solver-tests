@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  Run modes (thread.count=1 → sequential by default):
+    All tests      : mvn test
+    Smoke only     : mvn test -Dgroups=smoke
+    Regression only: mvn test -Dgroups=regression
+    Parallel       : mvn test -Dthread.count=4
+-->
+<suite name="MathSolver Smoke Suite" parallel="classes" thread-count="1">
+
+    <listeners>
+        <!-- Attaches a screenshot to Allure report on every failure or skip -->
+        <listener class-name="core.listeners.ScreenshotListener"/>
+        <!-- Applies RetryAnalyzer to every @Test automatically.
+             Must stay here — IAnnotationTransformer operates at suite level. -->
+        <listener class-name="core.listeners.RetryAnalyzerListener"/>
+    </listeners>
+
+    <test name="Main Paywall">
+        <classes>
+            <class name="tests.paywalls.MainPaywallTest"/>
+        </classes>
+    </test>
+
+    <test name="Experts Paywall">
+        <classes>
+            <class name="tests.paywalls.ExpertsPaywallTest"/>
+        </classes>
+    </test>
+
+    <test name="Main Screen">
+        <classes>
+            <class name="tests.MainScreenTest"/>
+        </classes>
+    </test>
+
+    <test name="Settings">
+        <classes>
+            <class name="tests.SettingsTest"/>
+        </classes>
+    </test>
+
+</suite>

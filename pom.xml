@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>math-solver-tests</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Dependency versions (centralized, easy to bump) -->
+        <appium.java-client.version>9.4.0</appium.java-client.version>
+        <testng.version>7.10.2</testng.version>
+        <owner.version>1.0.12</owner.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <logback.version>1.5.12</logback.version>
+        <assertj.version>3.26.3</assertj.version>
+        <allure.version>2.27.0</allure.version>
+
+        <!-- Plugin versions -->
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.surefire.plugin.version>3.5.2</maven.surefire.plugin.version>
+        <allure.maven.version>2.13.0</allure.maven.version>
+
+        <!-- Runtime defaults (override via -D on CLI) -->
+        <suite.file>src/test/resources/testng.xml</suite.file>
+        <thread.count>1</thread.count>
+        <parallel.mode>classes</parallel.mode>
+        <!-- Leave empty to run all groups; override with -Dgroups=smoke or -Dgroups=regression -->
+        <groups></groups>
+
+    </properties>
+
+    <dependencies>
+        <!-- Appium Java client: talks to Appium server, provides IOSDriver + XCUITestOptions.
+             Selenium comes transitively from Appium (4.41.0). ContextAware was removed from
+             Selenium 4.19+, but Appium still references it — we provide a stub shim in
+             src/main/java/org/openqa/selenium/ContextAware.java to satisfy the linkage. -->
+        <dependency>
+            <groupId>io.appium</groupId>
+            <artifactId>java-client</artifactId>
+            <version>${appium.java-client.version}</version>
+        </dependency>
+
+        <!-- TestNG: test runner, lifecycle hooks, parallel execution, data providers -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+
+        <!-- Owner: type-safe configuration, kills hardcoded strings and supports env overrides -->
+        <dependency>
+            <groupId>org.aeonbits.owner</groupId>
+            <artifactId>owner</artifactId>
+            <version>${owner.version}</version>
+        </dependency>
+
+        <!-- SLF4J + Logback: structured logging; no System.out in production frameworks -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <!-- AssertJ: fluent assertions, far more readable than raw TestNG Assert -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Allure TestNG: generates HTML reports with embedded screenshots.
+             Auto-registers AllureTestNg listener via ServiceLoader — no testng.xml entry needed.
+             Run locally: mvn test && allure serve target/allure-results -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+
+        <!-- Allure Java Commons: used directly in ScreenshotListener (Allure.addAttachment).
+             allure-testng pulls it transitively, declared here to make direct usage explicit. -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-java-commons</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <release>21</release>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${suite.file}</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <properties>
+                        <property>
+                            <name>threadcount</name>
+                            <value>${thread.count}</value>
+                        </property>
+                        <property>
+                            <name>parallel</name>
+                            <value>${parallel.mode}</value>
+                        </property>
+                    </properties>
+                    <groups>${groups}</groups>
+                    <!-- Capability overrides via -D on CLI (e.g. -Dbundle.id=com.example.app).
+                         Do NOT declare empty-string defaults here — Owner resolves system:properties
+                         before classpath:config.properties, so an empty string would shadow the file. -->
+                </configuration>
+            </plugin>
+            <!-- Allure Maven plugin: run `mvn allure:serve` to open report in browser -->
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure.maven.version}</version>
+                <configuration>
+                    <reportVersion>${allure.version}</reportVersion>
+                    <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
